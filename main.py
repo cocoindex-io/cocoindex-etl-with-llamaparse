@@ -24,12 +24,12 @@ class PdfToMarkdownExecutor:
             language="en",
         )
 
-    def __call__(self, content: bytes) -> str:
+    async def __call__(self, content: bytes) -> str:
         with tempfile.NamedTemporaryFile(delete=True, suffix=".pdf") as temp_file:
             temp_file.write(content)
             temp_file.flush()
             # Parse the PDF using LlamaParse
-            result = self._parser.parse(temp_file.name)
+            result = await self._parser.aparse(temp_file.name)
             # Get the markdown content
             markdown_documents = result.get_markdown_documents(split_by_page=False)
             # Combine all markdown content if there are multiple documents
