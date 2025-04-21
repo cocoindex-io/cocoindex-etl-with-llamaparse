@@ -5,14 +5,16 @@ from llama_cloud_services import LlamaParse
 
 import cocoindex
 
-class PdfToMarkdown(cocoindex.op.FunctionSpec):
+class ToMarkdown(cocoindex.op.FunctionSpec):
     """Convert a PDF to markdown."""
 
 @cocoindex.op.executor_class(gpu=True, cache=True, behavior_version=1)
-class PdfToMarkdownExecutor:
-    """Executor for PdfToMarkdown."""
+class LlamaParseExecutor:
+    """Executor for LlamaParse to parse files.
+       Supported file types: https://docs.llamaindex.ai/en/stable/llama_cloud/llama_parse/
+    """
 
-    spec: PdfToMarkdown
+    spec: ToMarkdown
     _parser: LlamaParse
 
     def prepare(self):
@@ -54,7 +56,7 @@ def pdf_embedding_flow(flow_builder: cocoindex.FlowBuilder, data_scope: cocoinde
     doc_embeddings = data_scope.add_collector()
 
     with data_scope["documents"].row() as doc:
-        doc["markdown"] = doc["content"].transform(PdfToMarkdown())
+        doc["markdown"] = doc["content"].transform(ToMarkdown())
         doc["chunks"] = doc["markdown"].transform(
             cocoindex.functions.SplitRecursively(),
             language="markdown", chunk_size=2000, chunk_overlap=500)
