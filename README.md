@@ -1,4 +1,15 @@
-Simple example for cocoindex: build embedding index based on local files, using LLamaParse as parser.
+# 🥥 CocoIndex ETL with LlamaParse
+
+[CocoIndex](https://cocoindex.io) is an ETL framework to transform data for AI, with real-time incremental processing - keep index up to date with low latency on source update. It supports custom logic like LEGO, and makes it easy for users to plugin the modules that best suits their project.
+
+In this example, we will walk you through how to build embedding index based on local files, using [LLamaParse](https://github.com/run-llama/llama_cloud_services/blob/main/parse.md) as parser.
+
+🥥 🌴 We are constantly improving - more blogs and examples coming soon. Stay tuned 👀 and **drop a star at [Cocoindex on Github](https://github.com/cocoindex-io/cocoindex)** for latest updates!
+[![GitHub](https://img.shields.io/github/stars/cocoindex-io/cocoindex?color=5B5BD6)](https://github.com/cocoindex-io/cocoindex)
+
+
+![Untitled design (9)](https://github.com/user-attachments/assets/5d9d49b9-6aa4-45f1-97cf-c9d16c02f0f4)
+
 
 ## Prerequisite
 [Install Postgres](https://cocoindex.io/docs/getting_started/installation#-install-postgres) if you don't have one.
