@@ -5,14 +5,16 @@ from llama_cloud_services import LlamaParse
 
 import cocoindex
 
-class PdfToMarkdown(cocoindex.op.FunctionSpec):
+class ToMarkdown(cocoindex.op.FunctionSpec):
     """Convert a PDF to markdown."""
 
 @cocoindex.op.executor_class(gpu=True, cache=True, behavior_version=1)
-class PdfToMarkdownExecutor:
-    """Executor for PdfToMarkdown."""
+class LlamaParseExecutor:
+    """Executor for LlamaParse to parse files.
+       Supported file types: https://docs.llamaindex.ai/en/stable/llama_cloud/llama_parse/
+    """
 
-    spec: PdfToMarkdown
+    spec: ToMarkdown
     _parser: LlamaParse
 
     def prepare(self):
@@ -24,12 +26,12 @@ class PdfToMarkdownExecutor:
             language="en",
         )
 
-    def __call__(self, content: bytes) -> str:
+    async def __call__(self, content: bytes) -> str:
         with tempfile.NamedTemporaryFile(delete=True, suffix=".pdf") as temp_file:
             temp_file.write(content)
             temp_file.flush()
             # Parse the PDF using LlamaParse
-            result = self._parser.parse(temp_file.name)
+            result = await self._parser.aparse(temp_file.name)
             # Get the markdown content
             markdown_documents = result.get_markdown_documents(split_by_page=False)
             # Combine all markdown content if there are multiple documents
@@ -44,7 +46,7 @@ def text_to_embedding(text: cocoindex.DataSlice) -> cocoindex.DataSlice:
         cocoindex.functions.SentenceTransformerEmbed(
             model="sentence-transformers/all-MiniLM-L6-v2"))
 
-@cocoindex.flow_def(name="PdfEmbedding")
+@cocoindex.flow_def(name="LlamaParse-PDF-Embedding")
 def pdf_embedding_flow(flow_builder: cocoindex.FlowBuilder, data_scope: cocoindex.DataScope):
     """
     Define an example flow that embeds files into a vector database.
@@ -54,7 +56,7 @@ def pdf_embedding_flow(flow_builder: cocoindex.FlowBuilder, data_scope: cocoinde
     doc_embeddings = data_scope.add_collector()
 
     with data_scope["documents"].row() as doc:
-        doc["markdown"] = doc["content"].transform(PdfToMarkdown())
+        doc["markdown"] = doc["content"].transform(ToMarkdown())
         doc["chunks"] = doc["markdown"].transform(
             cocoindex.functions.SplitRecursively(),
             language="markdown", chunk_size=2000, chunk_overlap=500)
