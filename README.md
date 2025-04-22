@@ -8,7 +8,7 @@ In this example, we will walk you through how to build embedding index based on 
 [![GitHub](https://img.shields.io/github/stars/cocoindex-io/cocoindex?color=5B5BD6)](https://github.com/cocoindex-io/cocoindex)
 
 
-![Untitled design (9)](https://github.com/user-attachments/assets/5d9d49b9-6aa4-45f1-97cf-c9d16c02f0f4)
+![Use CocoIndex and LlamaParse](image/coco-llamaparse.png)
 
 
 ## Prerequisite
